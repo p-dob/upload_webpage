@@ -4,7 +4,7 @@ const Header = () => {
   return (
     <div className='flex justify-between px-4 pt-4'>
         <h2>Dashboard</h2>
-        <h2>Welcome Back, Vaibhav</h2>
+        <h2>Welcome Back, Vaibhav Taragi</h2>
     </div>
   )
 }
