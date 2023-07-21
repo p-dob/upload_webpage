@@ -12,7 +12,7 @@ const Navbar = () => {
   return (
     <div className='shadow-lg p-2 w-1/7 flex flex-col overflow-y-scroll h-screen' style={{scrollbarWidth: 'none'}}>
         <ul className='border-b-slate-500 border-b p-4'>
-            <li><Link to="/">Home</Link></li>
+            <li><Link to="/">Home Run</Link></li>
             <li>Shorts</li>
             <li>Subscriptions</li>
         </ul>
