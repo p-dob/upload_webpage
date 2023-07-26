@@ -7,7 +7,7 @@ const FolderUpload = () => {
     const formData = new FormData();
     formData.append('file', acceptedFiles[0]);
 
-    axios.post('http://localhost:8000/upload', formData)
+    axios.post('http://localhost:5001/upload', formData)
       .then((response) => {
         console.log(response.data);
         // Handle success if needed
@@ -16,6 +16,24 @@ const FolderUpload = () => {
         console.error(error);
         // Handle error if needed
       });
+  };
+
+  const handleFileSelect = (event) => {
+    const selectedFile = event.target.files[0];
+    if (selectedFile) {
+      const formData = new FormData();
+      formData.append('file', selectedFile);
+
+      axios.post('http://localhost:8000/upload', formData)
+        .then((response) => {
+          console.log(response.data);
+          // Handle success if needed
+        })
+        .catch((error) => {
+          console.error(error);
+          // Handle error if needed
+        });
+    }
   };
 
   return (
@@ -30,6 +48,7 @@ const FolderUpload = () => {
           </div>
         )}
       </Dropzone>
+      <input type="file" style={{ display: 'none' }} onChange={handleFileSelect} />
     </div>
   );
 };
