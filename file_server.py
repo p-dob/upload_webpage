@@ -10,10 +10,8 @@ class WebhookHandler(BaseHTTPRequestHandler):
 
     def do_POST(self):
         try:
-            if self.path == "/webhook":
-                self.frontend_update()
-            elif self.path == "/backend":
-                self.backend_update()
+            if self.path == "/upload-files":
+                self.handle_file_upload()
             else:
                 self.send_response(404)
                 self.end_headers()
@@ -21,22 +19,23 @@ class WebhookHandler(BaseHTTPRequestHandler):
         except BrokenPipeError:
             pass
 
-    def frontend_update(self):
-        # Process the webhook payload and initiate the deployment process
-        webpage_build = BuildWebpage()
-        webpage_build.run()
+    def handle_file_upload(self):
+        # Make sure the upload directory exists
+        if not os.path.exists(self.UPLOAD_DIRECTORY):
+            os.makedirs(self.UPLOAD_DIRECTORY)
+
+        # Get the uploaded files from the request
+        files = self.rfile.readlines()
+
+        # Save the files to the upload directory
+        for i, file in enumerate(files):
+            filename = os.path.join(self.UPLOAD_DIRECTORY, f"file_{i}.txt")
+            with open(filename, "wb") as f:
+                f.write(file)
 
         self.send_response(200)
         self.end_headers()
-        self.wfile.write(b'Webhook received successfully')
-
-    def backend_update(self):
-        # Code to update backend repository here
-        backend_update = BuildWebpage()
-        backend_update.backend_update()
-        self.send_response(200)
-        self.end_headers()
-        self.wfile.write(b'Webpage updated successfully')
+        self.wfile.write(b'File upload successful')
 
 def run(server_class=HTTPServer, handler_class=WebhookHandler, port=5000):
     server_address = ('', port)
@@ -45,4 +44,4 @@ def run(server_class=HTTPServer, handler_class=WebhookHandler, port=5000):
     httpd.serve_forever()
 
 if __name__ == '__main__':
-    run(port=5000)
+    run(port=8000)

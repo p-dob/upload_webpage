@@ -6,7 +6,7 @@ class BuildWebpage:
         if os.path.exists(destination):
             print("Pulling Repository")
             os.chdir(destination)
-            subprocess.run(['git', 'pull'])
+            subprocess.run('git pull', shell=True)
         else:
             print("Cloning Repository")
             subprocess.run(['git', 'clone', repo_url, destination])
@@ -33,7 +33,7 @@ class BuildWebpage:
 
     def restart_nginx(self):
         print("Restarting the nginx server")
-        subprocess.run(['sudo', 'systemctl', 'restart', 'nginx'])
+        subprocess.run('sudo systemctl restart nginx', shell = True)
 
     def run(self):
         # Configuration
@@ -53,6 +53,22 @@ class BuildWebpage:
 
         # Restart Nginx
         self.restart_nginx()
+
+    def backend_update(self):
+        repo_url = 'https://github.com/p-dob/upload_webpage_backend.git'
+        destination = '/home/udaydigi/upload_webpage_backend'
+        # Pull the repository
+        self.pull_repository(repo_url, destination)
+
+        # Restarting the backned server
+        self.backend_restart()
+
+    def backend_restart(self):
+        command = "pkill -f 'python3 /home/udaydigi/upload_webpage/git_deploy.py'"
+        subprocess.run(command, shell=True)
+        command = "python3 /home/udaydigi/git_deploy.py"
+        subprocess.run(command, shell=True)
+
 
 if __name__ == '__main__':
         build_webpage = BuildWebpage()
