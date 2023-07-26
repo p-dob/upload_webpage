@@ -24,7 +24,7 @@ const FolderUpload = () => {
       const formData = new FormData();
       formData.append('file', selectedFile);
 
-      axios.post('http://localhost:8000/upload', formData)
+      axios.post('http://localhost:5001/upload', formData)
         .then((response) => {
           console.log(response.data);
           // Handle success if needed
