@@ -66,7 +66,7 @@ class BuildWebpage:
     def backend_restart(self):
         command = "pkill -f '/home/udaydigi/backend/bin/python3 app.py'"
         subprocess.run(command, shell=True)
-        command = "/home/udaydigi/backend/bin/python3 app.py"
+        command = "/home/udaydigi/backend/bin/python3 ~/upload_webpage_backend/app.py"
         subprocess.run(command, shell=True)
 
 
