@@ -4,6 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 const FolderFileUploader = () => {
   const [files, setFiles] = useState([]);
   const [progress, setProgress] = useState(0);
+  const [uploadedFiles, setUploadedFiles] = useState([]);
 
   const handleFileChange = (e) => {
     setFiles([...e.target.files]);
@@ -20,21 +21,26 @@ const FolderFileUploader = () => {
     setProgress(0);
     const totalFiles = files.length;
     let uploadedFiles = 0;
-
+  
     const interval = setInterval(() => {
       uploadedFiles++;
-      const currentProgress = (uploadedFiles / totalFiles) * 100;
+      const currentProgress = Math.floor((uploadedFiles / totalFiles) * 100); // Convert to integer
       setProgress(currentProgress);
-
+  
       if (currentProgress === 100) {
         clearInterval(interval);
+        setUploadedFiles([...files]); // Mark all files as uploaded
       }
     }, 200);
   };
+  
 
   return (
     <div className="container">
       <div className="panel panel-default">
+        <div className="panel-heading">
+          <strong>Upload Files</strong> <small>Bootstrap files upload</small>
+        </div>
         <div className="panel-body">
           {/* Standar Form */}
           <h4>Select files from your computer</h4>
@@ -99,11 +105,13 @@ const FolderFileUploader = () => {
                 <a
                   key={index}
                   href="#"
-                  className="list-group-item list-group-item-success"
+                  className={`list-group-item ${
+                    uploadedFiles.includes(file) ? 'list-group-item-success' : ''
+                  }`}
                 >
-                  <span className="badge alert-success pull-right">
-                    Success
-                  </span>
+                  {uploadedFiles.includes(file) && (
+                    <span className="badge alert-success pull-right">Success</span>
+                  )}
                   {file.name}
                 </a>
               ))}
@@ -114,6 +122,5 @@ const FolderFileUploader = () => {
     </div>
   );
 };
-
 
 export default FolderFileUploader;
