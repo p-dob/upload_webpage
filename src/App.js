@@ -1,10 +1,10 @@
 import React from 'react';
-import FolderUpload from './FolderUpload';
+import FolderFileUpload from './FolderFileUpload';
 
 function App() {
   return (
     <div className="App">
-      <FolderUpload />
+      <FolderFileUpload />
     </div>
   );
 }
