@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import FileUploaderForm from './FileUploaderForm';
 
 const FolderFileUploader = () => {
   const [files, setFiles] = useState([]);
@@ -11,10 +12,37 @@ const FolderFileUploader = () => {
   };
 
   const handleDrop = (e) => {
-    e.preventDefault();
-    setFiles([...e.dataTransfer.files]);
+    // e.preventDefault();
+    // const items = e.dataTransfer.items;
+    const items = e;
+  
+    let folderContents = [];
+  
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
+      if (item) {
+        folderContents.push(item.path)
+      }
+    }
+    setFiles(folderContents);
   };
 
+  const traverseFileTree = (item, folderContents) => {
+    if (item.isFile) {
+      item.file((file) => {
+        folderContents.push({ type: "file", file });
+      });
+    } else if (item.isDirectory) {
+      const reader = item.createReader();
+      reader.readEntries((entries) => {
+        entries.forEach((entry) => {
+          traverseFileTree(entry, folderContents);
+        });
+      });
+      folderContents.push({ type: "folder", name: item.name, children: [] });
+    }
+  };
+  
   const handleUpload = (e) => {
     e.preventDefault();
     // Simulate file upload progress
@@ -30,96 +58,41 @@ const FolderFileUploader = () => {
       if (currentProgress === 100) {
         clearInterval(interval);
         setUploadedFiles([...files]); // Mark all files as uploaded
+
+        // Print every file and folder name on the console
+        files.forEach((file) => {
+          console.log(file)
+          if (file.type === "file") {
+            console.log(file.file.name);
+          } else if (file.type === "folder") {
+            console.log(file.name + "/");
+            printFilesInFolder(file.children, file.name + "/");
+          }
+        });
       }
     }, 200);
+  };  
+
+  const printFilesInFolder = (folder, path = '') => {
+    folder.forEach((file) => {
+      if (file.type === "file") {
+        console.log(path + file.name);
+      } else if (file.type === "folder") {
+        console.log(path + file.name + "/");
+        printFilesInFolder(file.children, path + file.name + "/");
+      }
+    });
   };
-  
 
   return (
-    <div className="container">
-      <div className="panel panel-default">
-        <div className="panel-heading">
-          <strong>Upload Files</strong> <small>Bootstrap files upload</small>
-        </div>
-        <div className="panel-body">
-          {/* Standar Form */}
-          <h4>Select files from your computer</h4>
-          <form
-            onSubmit={handleUpload}
-            encType="multipart/form-data"
-            id="js-upload-form"
-          >
-            <div className="form-inline">
-              <div className="form-group">
-                <input
-                  type="file"
-                  name="files[]"
-                  id="js-upload-files"
-                  multiple
-                  onChange={handleFileChange}
-                />
-              </div>
-              <button
-                type="submit"
-                className="btn btn-sm btn-primary"
-                id="js-upload-submit"
-              >
-                Upload files
-              </button>
-            </div>
-          </form>
-
-          {/* Drop Zone */}
-          <h4>Or drag and drop files below</h4>
-          <div
-            className="upload-drop-zone"
-            id="drop-zone"
-            onDrop={handleDrop}
-            onDragOver={(e) => e.preventDefault()}
-            onDragLeave={(e) => e.preventDefault()}
-          >
-            {files.length === 0
-              ? 'Just drag and drop files here'
-              : `${files.length} file(s) selected`}
-          </div>
-
-          {/* Progress Bar */}
-          <div className="progress">
-            <div
-              className="progress-bar"
-              role="progressbar"
-              aria-valuenow={progress}
-              aria-valuemin="0"
-              aria-valuemax="100"
-              style={{ width: `${progress}%` }}
-            >
-              <span className="sr-only">{`${progress}% Complete`}</span>
-            </div>
-          </div>
-
-          {/* Upload Finished */}
-          <div className="js-upload-finished">
-            <h3>Processed files</h3>
-            <div className="list-group">
-              {files.map((file, index) => (
-                <a
-                  key={index}
-                  href="#"
-                  className={`list-group-item ${
-                    uploadedFiles.includes(file) ? 'list-group-item-success' : ''
-                  }`}
-                >
-                  {uploadedFiles.includes(file) && (
-                    <span className="badge alert-success pull-right">Success</span>
-                  )}
-                  {file.name}
-                </a>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <FileUploaderForm
+      files={files}
+      progress={progress}
+      uploadedFiles={uploadedFiles}
+      handleFileChange={handleFileChange}
+      handleDrop={handleDrop}
+      handleUpload={handleUpload}
+    />
   );
 };
 
