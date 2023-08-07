@@ -64,7 +64,7 @@ const FolderFileUploader = () => {
 
 
     try {
-      const response = await axios.post('http://localhost:5001/upload', formData, {
+      const response = await axios.post('http://49.207.56.148:8082/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         },
