@@ -27,3 +27,37 @@
   max-width: 400px;
   margin: 0 auto;
 }
+
+/* Add this to your CSS */
+.list-group-item {
+  position: relative;
+}
+
+.list-group-item-success .badge.alert-success {
+  position: absolute;
+  top: 5;
+  right: -50px; /* Adjust the value as needed to control the spacing */
+}
+
+/* Add this to your CSS */
+.circle-badge {
+  position: relative;
+}
+
+.circle-background {
+  color: lightgreen;
+  position: absolute;
+  top: 130%;
+  left: 20%;
+  transform: translate(-50%, -50%);
+  font-size: 20px; /* Adjust the size as needed */
+}
+
+.tick-icon {
+  color: green;
+  position: absolute;
+  top: 130%;
+  left: 20%;
+  transform: translate(-50%, -50%);
+  font-size: 12px; /* Adjust the size as needed */
+}

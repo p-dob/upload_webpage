@@ -1,18 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import FileUploaderForm from './FileUploaderForm';
 import axios from 'axios'; // Import axios
+import vars from './vars.json'
 
 const FolderFileUploader = () => {
   const [files, setFiles] = useState([]);
   const [progress, setProgress] = useState(0);
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [topLevelFolders, setTopLevelFolders] = useState([]);
+  const [uploadInProgress, setUploadInProgress] = useState(false);
 
   const handleFileChange = (e) => {
     setFiles([...e.target.files]);
   };
 
+  useEffect(() => {
+    setProgress(0); // Reset progress to 0 when new files are selected
+  }, [files]);
+  
   const handleDrop = (e) => {
     const items = e;
 
@@ -62,9 +68,9 @@ const FolderFileUploader = () => {
       formData.append('folderName', file.path);
     });
 
-
     try {
-      const response = await axios.post('http://49.207.56.148:8082/upload', formData, {
+      setUploadInProgress(true); // Set upload status to true
+      const response = await axios.post(vars['upload_endpoint'], formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         },
@@ -73,14 +79,13 @@ const FolderFileUploader = () => {
           setProgress(currentProgress);
         }
       });
-
       console.log(response.data); // Log the response from the backend
-
       // Clear the uploaded files and progress
       setUploadedFiles([...files]);
-      setProgress(0);
+      setUploadInProgress(false); // Reset upload status after successful upload
     } catch (error) {
       console.error('Error uploading files:', error);
+      setUploadInProgress(false); // Reset upload status on error
     }
   };
 
@@ -89,6 +94,7 @@ const FolderFileUploader = () => {
       files={files}
       progress={progress}
       uploadedFiles={uploadedFiles}
+      uploadInProgress={uploadInProgress}
       handleFileChange={handleFileChange}
       handleDrop={handleDrop}
       handleUpload={handleUpload}

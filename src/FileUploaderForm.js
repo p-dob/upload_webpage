@@ -1,8 +1,9 @@
 import React from 'react';
 import { useDropzone } from 'react-dropzone';
-import { useCallback } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheck, faCircle } from '@fortawesome/free-solid-svg-icons';
 
-const FileUploaderForm = ({ files, progress, uploadedFiles, handleFileChange, handleDrop, handleUpload }) => {  
+const FileUploaderForm = ({ files, progress, uploadedFiles, uploadInProgress, handleFileChange, handleDrop, handleUpload }) => {  
   const { getRootProps, getInputProps } = useDropzone({
     onDrop: handleDrop,
     noClick: true, // To prevent the default file selection behavior when clicking inside the drop zone
@@ -16,19 +17,19 @@ const FileUploaderForm = ({ files, progress, uploadedFiles, handleFileChange, ha
     });
   
     return (
-      <div
-        className={`upload-drop-zone ${isDragActive ? 'active' : ''}`}
-        id="drop-zone"
-        {...getRootProps()}
-      >
-        <input {...getInputProps()} />
-        <h4>Or drag and drop files below</h4>
-        {files.length === 0
-          ? 'Just drag and drop files here'
-          : `${files.length} file(s) selected`}
-      </div>
-    );
-  };
+        <div
+          className={`upload-drop-zone ${isDragActive ? 'active' : ''}`}
+          id="drop-zone"
+          {...getRootProps()}
+        >
+          <input {...getInputProps()} />
+          <h4>{isDragActive ? 'Drop files here' : 'Drag and drop files here, or click to select'}</h4>
+          {files.length === 0
+            ? 'No files selected'
+            : `${files.length} file(s) selected`}
+        </div>
+      );
+    };
   
 
     return (
@@ -74,8 +75,8 @@ const FileUploaderForm = ({ files, progress, uploadedFiles, handleFileChange, ha
                             aria-valuemin="0"
                             aria-valuemax="100"
                             style={{ width: `${progress}%` }}
-                        >
-                            <span className="sr-only">{`${progress}% Complete`}</span>
+                            >
+                            {uploadInProgress ? `${progress}%` : `${progress}% Complete`}
                         </div>
                     </div>
 
@@ -91,9 +92,15 @@ const FileUploaderForm = ({ files, progress, uploadedFiles, handleFileChange, ha
                                         }`}
                                 >
                                     {uploadedFiles.includes(file) && (
-                                        <span className="badge alert-success pull-right">Success</span>
+                                        <span className="badge alert-success pull-right circle-badge">
+                                        <FontAwesomeIcon icon={faCircle} className="circle-background" />
+                                        <FontAwesomeIcon icon={faCheck} className="tick-icon" />
+                                        </span>
                                     )}
-                                    {file.name}
+                                {/* Truncate long filenames */}
+                                <span className="file-name">
+                                    {file.name.length > 40 ? file.name.substring(0, 40) + '...' : file.name}
+                                </span>
                                 </a>
                             ))}
                         </div>
