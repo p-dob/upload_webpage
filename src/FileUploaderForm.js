@@ -3,7 +3,7 @@ import { useDropzone } from 'react-dropzone';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faCircle } from '@fortawesome/free-solid-svg-icons';
 
-const FileUploaderForm = ({ files, progress, uploadedFiles, uploadInProgress, handleFileChange, handleDrop, handleUpload }) => {  
+const FileUploaderForm = ({ files, progress, uploadedFiles, uploadInProgress, handleFileChange, handleDrop, handleUpload, topLevelFolders }) => {  
   const { getRootProps, getInputProps } = useDropzone({
     onDrop: handleDrop,
     noClick: true, // To prevent the default file selection behavior when clicking inside the drop zone
@@ -84,23 +84,22 @@ const FileUploaderForm = ({ files, progress, uploadedFiles, uploadInProgress, ha
                     <div className="js-upload-finished">
                         <h3>Processed files</h3>
                         <div className="list-group">
-                            {files.map((file, index) => (
+                            {topLevelFolders.map((file, index) => (
                                 <a
                                     key={index}
                                     href="#"
-                                    className={`list-group-item ${uploadedFiles.includes(file) ? 'list-group-item-success' : ''
-                                        }`}
+                                    className={`list-group-item ${uploadedFiles.includes(file) ? 'list-group-item-success' : ''}`}
                                 >
                                     {uploadedFiles.includes(file) && (
                                         <span className="badge alert-success pull-right circle-badge">
-                                        <FontAwesomeIcon icon={faCircle} className="circle-background" />
-                                        <FontAwesomeIcon icon={faCheck} className="tick-icon" />
+                                            <FontAwesomeIcon icon={faCircle} className="circle-background" />
+                                            <FontAwesomeIcon icon={faCheck} className="tick-icon" />
                                         </span>
                                     )}
-                                {/* Truncate long filenames */}
-                                <span className="file-name">
-                                    {file.name.length > 40 ? file.name.substring(0, 40) + '...' : file.name}
-                                </span>
+                                    {/* Display folder name */}
+                                    <span className="file-name">
+                                        {file}
+                                    </span>
                                 </a>
                             ))}
                         </div>

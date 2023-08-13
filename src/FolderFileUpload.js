@@ -21,10 +21,8 @@ const FolderFileUploader = () => {
   
   const handleDrop = (e) => {
     const items = e;
-
     let folderContents = [];
-    let topLevelFolders = new Set(); // Using Set to store unique top-level folder names
-
+    let toplevelFolders = new Set(); // Using Set to store unique top-level folder names
     for (let i = 0; i < items.length; i++) {
       const item = items[i];
       if (item) {
@@ -35,12 +33,12 @@ const FolderFileUploader = () => {
           if (fullPathParts[0] === "") {
             fullPathParts.shift(); // Remove the first element if it is empty (due to leading '/')
           }
-          topLevelFolders.add(fullPathParts[0]);
+          toplevelFolders.add(fullPathParts[0]);
         }
       }
     }
     setFiles(folderContents);
-    setTopLevelFolders(Array.from(topLevelFolders)); // Update the state with top-level folder names
+    setTopLevelFolders(Array.from(toplevelFolders)); // Update the state with top-level folder names
   };
   
   const traverseFileTree = (item, folderContents) => {
@@ -98,6 +96,7 @@ const FolderFileUploader = () => {
       handleFileChange={handleFileChange}
       handleDrop={handleDrop}
       handleUpload={handleUpload}
+      topLevelFolders={topLevelFolders}
     />
   );
 };
