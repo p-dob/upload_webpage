@@ -14,7 +14,18 @@ const FolderFileUploader = () => {
   const [folderProgress, setFolderProgress] = useState({});
 
   const handleFileChange = (e) => {
-    setFiles([...e.target.files]);
+    const items = [...e.target.files]
+    let toplevelFolders = [];
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
+      if (item) {
+        if (item.name) {
+          toplevelFolders.push(item.name);
+        }
+      }
+    }
+    setFiles(items);
+    setTopLevelFolders(toplevelFolders);
   };
 
   useEffect(() => {
@@ -24,6 +35,8 @@ const FolderFileUploader = () => {
   // useEffect to update folderProgress when fileProgress changes
   useEffect(() => {
     const updatedFolderProgress = {};
+    let totalUploadedSize = 0;
+    let totalTotalSize = 0;
 
     Object.entries(fileProgress).forEach(([filename, progressArray]) => {
       if (filename.startsWith('/')) {
@@ -52,30 +65,48 @@ const FolderFileUploader = () => {
       }
     });
 
-    // Update the folderProgress state variable
+    // Calculate the total uploaded size and total size based on each file's progress
+    Object.entries(updatedFolderProgress).forEach(([filename, progressData]) => {
+      totalUploadedSize += progressData.uploadedSize;
+      totalTotalSize += progressData.totalSize;
+    });
+  
+    if (totalTotalSize === 0) {
+      setProgress(0); // Avoid division by zero
+    } else {
+      const total_progress = (totalUploadedSize / totalTotalSize) * 100;
+      setProgress(total_progress.toFixed(2));
+    }
+  
     setFolderProgress(updatedFolderProgress);
   }, [fileProgress]);
 
   const handleDrop = (e) => {
     const items = e;
     let folderContents = [];
-    let toplevelFolders = new Set(); // Using Set to store unique top-level folder names
+    // Using Set to store unique top-level folder names
+    let toplevelFolders = new Set();
+
+    // this might seem unnecessary at first, as folder's names and progress
+    // are captured in handleUpload but it is needed otherwise no name will
+    // appear unless we click on upload button
     for (let i = 0; i < items.length; i++) {
       const item = items[i];
       if (item) {
         if (item.path) {
-          // folderContents.push(item.path);
           folderContents.push(item);
           const fullPathParts = item.path.split("/");
           if (fullPathParts[0] === "") {
-            fullPathParts.shift(); // Remove the first element if it is empty (due to leading '/')
+            // Remove the first element if it is empty (due to leading '/')
+            fullPathParts.shift();
           }
           toplevelFolders.add(fullPathParts[0]);
         }
       }
     }
     setFiles(folderContents);
-    setTopLevelFolders(Array.from(toplevelFolders)); // Update the state with top-level folder names
+    // Update the state with top-level folder names
+    setTopLevelFolders(Array.from(toplevelFolders));
   };
 
   const handleUpload = async (e) => {
@@ -84,11 +115,12 @@ const FolderFileUploader = () => {
     try {
       setUploadInProgress(true); // Set upload status to true
 
-      const totalBytes = files.reduce((total, file) => total + file.size, 0); // Calculate total bytes to be uploaded
-
       // Create an array to store promises for each upload
       const uploadPromises = files.map((file) => {
         const formData = new FormData();
+        if (!file.path) {
+          file.path = file.name
+        }
         formData.append('file', file);
         formData.append('folderName', file.path);
 
@@ -117,7 +149,8 @@ const FolderFileUploader = () => {
 
       // Clear the uploaded files and progress
       setUploadedFiles([...files]);
-      setUploadInProgress(false); // Reset upload status after successful upload
+      // Reset upload status after successful upload
+      setUploadInProgress(false);
     } catch (error) {
       console.error('Error uploading files:', error);
       setUploadInProgress(false); // Reset upload status on error
