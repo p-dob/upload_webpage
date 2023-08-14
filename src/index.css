@@ -33,31 +33,39 @@
   position: relative;
 }
 
+/* Add this to your CSS */
+.list-group-item {
+  position: relative;
+}
+
 .list-group-item-success .badge.alert-success {
   position: absolute;
-  top: 5;
-  right: -50px; /* Adjust the value as needed to control the spacing */
+  top: 50%; /* Position it in the middle of the item vertically */
+  right: 20px; /* Adjust the value as needed to control the spacing */
+  transform: translateY(-50%); /* Move it up by half of its height */
 }
 
 /* Add this to your CSS */
 .circle-badge {
-  position: relative;
+  position: absolute;
+  display: inline-block;
+  vertical-align: middle; /* Align with the progress bar */
 }
 
 .circle-background {
   color: lightgreen;
   position: absolute;
-  top: 130%;
-  left: 20%;
-  transform: translate(-50%, -50%);
+  top: 200%; /* Adjust the vertical position */
+  left: 400px; /* Adjust the horizontal position */
+  transform: translateY(-50%); /* Center vertically */
   font-size: 20px; /* Adjust the size as needed */
 }
 
 .tick-icon {
   color: green;
   position: absolute;
-  top: 130%;
-  left: 20%;
-  transform: translate(-50%, -50%);
+  top: 200%; /* Adjust the vertical position */
+  left: 405px; /* Adjust the horizontal position */
+  transform: translateY(-50%); /* Center vertically */
   font-size: 12px; /* Adjust the size as needed */
 }
