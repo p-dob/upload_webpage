@@ -62,11 +62,11 @@ const FolderFileUploader = () => {
         updatedFolderProgress[folderName].totalSize += innerProgress.totalSize;
         const folder_total_size = Object.values(updatedFolderProgress[folderName]).reduce((total, file) => total + file.totalSize, 0);
         let percent = (updatedFolderProgress[folderName].uploadedSize / foldersToUpload[folderName]) * 100;
-        updatedFolderProgress[folderName].uploadPercent = min(percent, 100)
+        updatedFolderProgress[folderName].uploadPercent = Math.min(percent, 100)
       } else {
         updatedFolderProgress[filename] = progressArray[progressArray.length - 1];
         let percent = (updatedFolderProgress[filename].uploadedSize / foldersToUpload[filename]) * 100;
-        updatedFolderProgress[filename].uploadPercent = min(percent, 100)
+        updatedFolderProgress[filename].uploadPercent = Math.min(percent, 100)
       }
     });
 
