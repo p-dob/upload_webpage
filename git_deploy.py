@@ -11,8 +11,10 @@ class WebhookHandler(BaseHTTPRequestHandler):
     def do_POST(self):
         try:
             if self.path == "/webhook":
+                print('frontend')
                 self.frontend_update()
             elif self.path == "/backend":
+                print('backend')
                 self.backend_update()
             else:
                 self.send_response(404)

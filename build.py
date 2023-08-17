@@ -6,6 +6,7 @@ class BuildWebpage:
         if os.path.exists(destination):
             print("Pulling Repository")
             os.chdir(destination)
+            subprocess.run('git checkout -- .', shell=True)
             subprocess.run('git pull', shell=True)
         else:
             print("Cloning Repository")
@@ -27,7 +28,9 @@ class BuildWebpage:
             print("Moving new build files...")
             env = os.environ.copy()
             env['PATH'] += ':/home/udaydigi/.local/bin'  # Add the path to node executable
-            subprocess.run(['sudo', 'mv', source, destination], env=env)
+            command = f'echo {sudo_password} | sudo -S mv {source} {destination}'
+            # subprocess.run(['echo', f'{sudo_password}', '|','sudo', '-S', 'mv', source, destination], env=env)
+            subprocess.run(command, shell=True, env=env)
         else:
             print("Build directory does not exist. Check the build process for errors.")
 
@@ -54,6 +57,15 @@ class BuildWebpage:
         # Restart Nginx
         self.restart_nginx()
 
+    def backend_restart(self):
+        command = "pkill -f '/home/udaydigi/backend/bin/python3 -u /home/udaydigi/upload_webpage_backend/app.py'"
+        subprocess.run(command, shell=True)
+        # command = "nohup /home/udaydigi/backend/bin/python3 -u /home/udaydigi/upload_webpage_backend/app.py | ts '[%Y-%m-%d %H:%M:%S]' | tee -a log_backend.log > /dev/null 2>&1 &"
+        command = "/home/udaydigi/backend/bin/python3 -u /home/udaydigi/upload_webpage_backend/app.py"
+        command = "nohup /home/udaydigi/backend/bin/gunicorn -w 4 -b 127.0.0.1:5001 app:app --access-logfile - --error-logfile - --reload 2>&1 | ts '[%Y-%m-%d %H:%M:%S]' | tee -a ~/log_backend.log"
+        with open('/home/udaydigi/log_backend1.log', 'a') as log_file:
+            subprocess.run(command, shell=True, stdout=log_file, stderr=subprocess.STDOUT)
+
     def backend_update(self):
         repo_url = 'https://github.com/p-dob/upload_webpage_backend.git'
         destination = '/home/udaydigi/upload_webpage_backend'
@@ -61,14 +73,7 @@ class BuildWebpage:
         self.pull_repository(repo_url, destination)
 
         # Restarting the backned server
-        self.backend_restart()
-
-    def backend_restart(self):
-        command = "pkill -f 'home/udaydigi/backend/bin/python3 /home/udaydigi/upload_webpage_backend/app.py'"
-        subprocess.run(command, shell=True)
-        command = "/home/udaydigi/backend/bin/python3 /home/udaydigi/upload_webpage_backend/app.py"
-        subprocess.run(command, shell=True)
-
+        # self.backend_restart()
 
 if __name__ == '__main__':
         build_webpage = BuildWebpage()
