@@ -32,6 +32,7 @@ const FolderFileUploader = () => {
 
   useEffect(() => {
     setProgress(0); // Reset progress to 0 when new files are selected
+    setFileProgress({});
   }, [files]);
 
   // useEffect to update folderProgress when fileProgress changes
