@@ -13,6 +13,7 @@ const FolderFileUploader = () => {
   const [uploadInProgress, setUploadInProgress] = useState(false);
   const [fileProgress, setFileProgress] = useState({});
   const [folderProgress, setFolderProgress] = useState({});
+  const [foldersToUpload, setFoldersToUpload] = useState({});
 
   const handleFileChange = (e) => {
     const items = [...e.target.files]
@@ -59,10 +60,13 @@ const FolderFileUploader = () => {
         // Calculate total progress and total size for the folder
         updatedFolderProgress[folderName].uploadedSize += innerProgress.uploadedSize;
         updatedFolderProgress[folderName].totalSize += innerProgress.totalSize;
-        updatedFolderProgress[folderName].uploadPercent = (updatedFolderProgress[folderName].uploadedSize / updatedFolderProgress[folderName].totalSize) * 100;
+        const folder_total_size = Object.values(updatedFolderProgress[folderName]).reduce((total, file) => total + file.totalSize, 0);
+        let percent = (updatedFolderProgress[folderName].uploadedSize / foldersToUpload[folderName]) * 100;
+        updatedFolderProgress[folderName].uploadPercent = min(percent, 100)
       } else {
         updatedFolderProgress[filename] = progressArray[progressArray.length - 1];
-        updatedFolderProgress[filename].uploadPercent = (updatedFolderProgress[filename].uploadedSize / updatedFolderProgress[filename].totalSize) * 100;
+        let percent = (updatedFolderProgress[filename].uploadedSize / foldersToUpload[filename]) * 100;
+        updatedFolderProgress[filename].uploadPercent = min(percent, 100)
       }
     });
 
@@ -92,6 +96,7 @@ const FolderFileUploader = () => {
     // this might seem unnecessary at first, as folder's names and progress
     // are captured in handleUpload but it is needed otherwise no name will
     // appear unless we click on upload button
+    const folders = {}
     for (let i = 0; i < items.length; i++) {
       const item = items[i];
       if (item) {
@@ -102,13 +107,21 @@ const FolderFileUploader = () => {
             // Remove the first element if it is empty (due to leading '/')
             fullPathParts.shift();
           }
+          let folderName = fullPathParts[0];
+          if(folders[folderName] === undefined){
+            folders[folderName] = 0;
+          }
+          folders[folderName] += parseInt(item.size, 10);
           toplevelFolders.add(fullPathParts[0]);
         }
       }
     }
     setFiles(folderContents);
+    let folder_total_size = 0;
+    folder_total_size = folderContents.reduce((total, file) => total + file.size, 0);
     // Update the state with top-level folder names
     setTopLevelFolders(Array.from(toplevelFolders));
+    setFoldersToUpload(folders);
   };
 
   const handleUpload = async (e) => {
