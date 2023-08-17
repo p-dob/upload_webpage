@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import FileUploaderForm from './FileUploaderForm';
 import axios from 'axios';
 import vars from './vars.json'
+import { useDropzone } from 'react-dropzone';
 
 const FolderFileUploader = () => {
   const [files, setFiles] = useState([]);
@@ -70,14 +71,14 @@ const FolderFileUploader = () => {
       totalUploadedSize += progressData.uploadedSize;
       totalTotalSize += progressData.totalSize;
     });
-  
+
     if (totalTotalSize === 0) {
       setProgress(0); // Avoid division by zero
     } else {
       const total_progress = (totalUploadedSize / totalTotalSize) * 100;
       setProgress(total_progress.toFixed(2));
     }
-  
+
     setFolderProgress(updatedFolderProgress);
   }, [fileProgress]);
 
@@ -157,6 +158,27 @@ const FolderFileUploader = () => {
     }
   };
 
+  const MyDropZone = () => {
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({
+      onDrop: handleDrop,
+      noClick: true, // Prevent file dialog from opening on click
+    });
+
+    return (
+      <div
+        className={`upload-drop-zone ${isDragActive ? 'active' : ''}`}
+        id="drop-zone"
+        {...getRootProps()}
+      >
+        <input {...getInputProps()} />
+        <h4>{isDragActive ? 'Drop files here' : 'Drag and drop files here, or click to select'}</h4>
+        {files.length === 0
+          ? 'No files selected'
+          : `${files.length} file(s) selected`}
+      </div>
+    );
+  };
+
   return (
     <FileUploaderForm
       files={files}
@@ -164,10 +186,10 @@ const FolderFileUploader = () => {
       uploadedFiles={uploadedFiles}
       uploadInProgress={uploadInProgress}
       handleFileChange={handleFileChange}
-      handleDrop={handleDrop}
       handleUpload={handleUpload}
       topLevelFolders={topLevelFolders}
       folderProgress={folderProgress}
+      MyDropZone={MyDropZone}
     />
   );
 };
