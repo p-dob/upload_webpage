@@ -62,11 +62,11 @@ const FolderFileUploader = () => {
         updatedFolderProgress[folderName].uploadedSize += innerProgress.uploadedSize;
         updatedFolderProgress[folderName].totalSize += innerProgress.totalSize;
         let percent = (updatedFolderProgress[folderName].uploadedSize / foldersToUpload[folderName]) * 100;
-        updatedFolderProgress[folderName].uploadPercent = Math.min(percent, 100)
+        updatedFolderProgress[folderName].uploadPercent = Math.min(percent, 100);
       } else {
         updatedFolderProgress[filename] = progressArray[progressArray.length - 1];
         let percent = (updatedFolderProgress[filename].uploadedSize / foldersToUpload[filename]) * 100;
-        updatedFolderProgress[filename].uploadPercent = Math.min(percent, 100)
+        updatedFolderProgress[filename].uploadPercent = Math.min(percent, 100);
       }
     });
 
@@ -80,8 +80,9 @@ const FolderFileUploader = () => {
     if (totalTotalSize === 0) {
       setProgress(0); // Avoid division by zero
     } else {
-      const total_progress = (totalUploadedSize / totalTotalSize) * 100;
-      setProgress(total_progress.toFixed(2));
+      let total_progress = (totalUploadedSize / totalTotalSize) * 100;
+      total_progress = Math.min(total_progress, 100).toFixed(2);
+      setProgress(total_progress);
     }
 
     setFolderProgress(updatedFolderProgress);
