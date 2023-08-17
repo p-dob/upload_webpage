@@ -66,10 +66,11 @@ const FolderFileUploader = () => {
       }
     });
 
+    totalTotalSize = files.reduce((total, file) => total + file.size, 0);
     // Calculate the total uploaded size and total size based on each file's progress
     Object.entries(updatedFolderProgress).forEach(([filename, progressData]) => {
       totalUploadedSize += progressData.uploadedSize;
-      totalTotalSize += progressData.totalSize;
+      // totalTotalSize += progressData.totalSize;
     });
 
     if (totalTotalSize === 0) {
@@ -181,7 +182,6 @@ const FolderFileUploader = () => {
 
   return (
     <FileUploaderForm
-      files={files}
       progress={progress}
       uploadedFiles={uploadedFiles}
       uploadInProgress={uploadInProgress}
