@@ -109,7 +109,7 @@ const FolderFileUploader = () => {
             fullPathParts.shift();
           }
           let folderName = fullPathParts[0];
-          if(folders[folderName] === undefined){
+          if (folders[folderName] === undefined) {
             folders[folderName] = 0;
           }
           folders[folderName] += parseInt(item.size, 10);
@@ -173,38 +173,32 @@ const FolderFileUploader = () => {
     }
   };
 
-  const MyDropZone = () => {
-    const { getRootProps, getInputProps, isDragActive } = useDropzone({
-      onDrop: handleDrop,
-      noClick: true, // Prevent file dialog from opening on click
-    });
-
-    return (
-      <div
-        className={`upload-drop-zone ${isDragActive ? 'active' : ''}`}
-        id="drop-zone"
-        {...getRootProps()}
-      >
-        <input {...getInputProps()} />
-        <h4>{isDragActive ? 'Drop files here' : 'Drag and drop files here, or click to select'}</h4>
-        {files.length === 0
-          ? 'No files selected'
-          : `${files.length} file(s) selected`}
-      </div>
-    );
-  };
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop: handleDrop,
+    noClick: true, // Prevent file dialog from opening on click
+  });
 
   return (
-    <FileUploaderForm
-      progress={progress}
-      uploadedFiles={uploadedFiles}
-      uploadInProgress={uploadInProgress}
-      handleFileChange={handleFileChange}
-      handleUpload={handleUpload}
-      topLevelFolders={topLevelFolders}
-      folderProgress={folderProgress}
-      MyDropZone={MyDropZone}
-    />
+    <div
+      className={`dropzone ${isDragActive ? 'active' : ''}`}
+      id="dropzone"
+      {...getRootProps()}
+    >
+      <FileUploaderForm
+        progress={progress}
+        uploadedFiles={uploadedFiles}
+        uploadInProgress={uploadInProgress}
+        handleFileChange={handleFileChange}
+        handleUpload={handleUpload}
+        topLevelFolders={topLevelFolders}
+        folderProgress={folderProgress}
+      />
+      <input {...getInputProps()} />
+      {/* <h4>{isDragActive ? 'Drop files here' : 'Drag and drop files here, or click to select'}</h4> */}
+      {files.length === 0
+        ? 'No files selected'
+        : `${files.length} file(s) selected`}
+    </div>
   );
 };
 
