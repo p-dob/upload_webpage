@@ -1,0 +1,87 @@
+/* Add this to your CSS */
+.list-group-item {
+    position: relative;
+}
+
+.list-group-item-success .badge.alert-success {
+    position: absolute;
+    top: 50%;
+    /* Position it in the middle of the item vertically */
+    right: 20px;
+    /* Adjust the value as needed to control the spacing */
+    transform: translateY(-50%);
+    /* Move it up by half of its height */
+}
+
+/* Add this to your CSS */
+.circle-badge {
+    position: absolute;
+    display: inline-block;
+    vertical-align: middle;
+    /* Align with the progress bar */
+}
+
+.circle-background {
+    color: lightgreen;
+    position: absolute;
+    top: 200%;
+    /* Adjust the vertical position */
+    left: 400px;
+    /* Adjust the horizontal position */
+    transform: translateY(-50%);
+    /* Center vertically */
+    font-size: 20px;
+    /* Adjust the size as needed */
+}
+
+.tick-icon {
+    color: green;
+    position: absolute;
+    top: 200%;
+    /* Adjust the vertical position */
+    left: 405px;
+    /* Adjust the horizontal position */
+    transform: translateY(-50%);
+    /* Center vertically */
+    font-size: 12px;
+    /* Adjust the size as needed */
+}
+
+.list-group {
+    max-height: 230px;
+    /* Adjust the maximum height as needed */
+    overflow-y: auto;
+}
+
+.js-upload-finished {
+    max-height: 0;
+    max-width: 400px;
+    margin: 0 auto;
+    position: fixed;
+    /* Use fixed position */
+    bottom: 20px;
+    /* Adjust this value to control the space from the bottom */
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: auto;
+    overflow: hidden;
+    transition: max-height 0.5s ease-in-out;
+    /* Adjust the duration and easing as needed */
+}
+
+.uploaded-visible-files {
+    max-height: 270px;
+    /* Adjust the value to the desired max height when visible */
+    animation: slide-up 1s ease-out forwards;
+}
+
+@keyframes slide-up {
+    from {
+        max-height: 0;
+    }
+
+    to {
+        max-height: 270px;
+        /* Adjust this value to match the value in .uploaded-visible-files */
+    }
+}

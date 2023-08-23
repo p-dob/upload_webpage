@@ -1,73 +1,3 @@
-/* Custom style */
-.upload-drop-zone {
-  height: 200px;
-  border-width: 2px;
-  margin-bottom: 20px;
-}
-
-/* Custom style */
-.upload-drop-zone {
-  color: #ccc;
-  border-style: dashed;
-  border-color: #ccc;
-  line-height: 200px;
-  text-align: center;
-}
-
-/* Custom style */
-.upload-drop-zone.drop {
-  color: #222;
-  border-color: #222;
-}
-
-/* Custom style */
-.panel {
-  max-width: 400px;
-  margin: 0 auto;
-}
-
-/* Add this to your CSS */
-.list-group-item {
-  position: relative;
-}
-
-/* Add this to your CSS */
-.list-group-item {
-  position: relative;
-}
-
-.list-group-item-success .badge.alert-success {
-  position: absolute;
-  top: 50%; /* Position it in the middle of the item vertically */
-  right: 20px; /* Adjust the value as needed to control the spacing */
-  transform: translateY(-50%); /* Move it up by half of its height */
-}
-
-/* Add this to your CSS */
-.circle-badge {
-  position: absolute;
-  display: inline-block;
-  vertical-align: middle; /* Align with the progress bar */
-}
-
-.circle-background {
-  color: lightgreen;
-  position: absolute;
-  top: 200%; /* Adjust the vertical position */
-  left: 400px; /* Adjust the horizontal position */
-  transform: translateY(-50%); /* Center vertically */
-  font-size: 20px; /* Adjust the size as needed */
-}
-
-.tick-icon {
-  color: green;
-  position: absolute;
-  top: 200%; /* Adjust the vertical position */
-  left: 405px; /* Adjust the horizontal position */
-  transform: translateY(-50%); /* Center vertically */
-  font-size: 12px; /* Adjust the size as needed */
-}
-
 body {
   margin: 0;
   padding: 0;
@@ -83,12 +13,12 @@ body {
   min-height: 100vh;
 }
 
-.container {
-  background-color: rgba(255, 255, 255, 0.8);
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  text-align: center;
+/* Custom style */
+.panel-body {
+  max-width: 400px;
+  margin: 0 auto;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .wrapper {
@@ -110,6 +40,25 @@ body {
 }
 
 .dropzone.active {
-	border: 11px dashed #60a7dc;
-	display: block;
+	border: 2px dashed #60a7dc;
+	display: flex;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Adjust the alpha value for desired transparency */
+  z-index: 9999999999;
+}
+.dropzone.active .panel.panel-default {
+  /* Center horizontally */
+  margin-left: auto;
+  margin-right: auto;
+}
+/* Keep panel-body and its children static when the dropzone is active */
+.dropzone.active .panel.panel-default {
+  /* You can explicitly set the styles you want to stay static here */
+  /* For example: */
+  max-width: 400px;
+  margin: 0 auto;
 }
