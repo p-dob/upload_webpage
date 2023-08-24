@@ -2,9 +2,9 @@ body {
   margin: 0;
   padding: 0;
   font-family: sans-serif;
-  background-image: url('/public/logoud.png'), url('/public/logo2.png'), url('/public/logokud.png'), url('/public/text.png'); /* Use absolute path */
-  background-size:  150px, auto 700px, 250px,  250px;
-  background-color: rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8),rgba(255, 255, 255, 0.8);
+  background-image: url('/public/logoud.png'), url('/public/logo2.png'), url('/public/logokud.png'), url('/public/text.png');
+  background-size: 150px, auto 700px, 250px, 250px;
+  background-color: rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8);
   background-position: top left, center, top right, bottom right;
   background-repeat: no-repeat;
   display: flex;
@@ -13,65 +13,48 @@ body {
   min-height: 100vh;
 }
 
-/* Custom style */
-.panel-body {
-  max-width: 450px;
-  margin: 0 auto;
-  margin-left: auto;
-  margin-right: auto;
-  background-color: rgba(103, 148, 197, 0.5);
-  border-radius: 10px;
-  padding: 1%;
-  text-align: center;
-}
-
 .wrapper {
-	max-width: 50rem;
-	margin: 1rem auto;
-	padding: 0.2rem 1rem;
-	border: 2px solid #ee0000;
-	background: rgba(68, 68, 68, 0.2);
+  max-width: 50rem;
+  margin: 1rem auto;
+  padding: 0.2rem 1rem;
+  border: 2px solid #ee0000;
+  background: rgba(68, 68, 68, 0.2);
 }
 
 .dropzone {
-	box-sizing: border-box;
+  box-sizing: border-box;
   background: none;
-	position: fixed;
-	width: 100%;
-	height: 100%;
-	left: 0;
-	top: 0;
-	z-index: 99999999999;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  z-index: 99999999999;
 }
 
 .dropzone.active {
-	border: 5px dashed #60a7dc;
-	display: flex;
+  border: 5px dashed #60a7dc;
+  display: flex;
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Adjust the alpha value for desired transparency */
+  background-color: rgba(0, 0, 0, 0.5);
+  /* Adjust the alpha value for desired transparency */
   z-index: 9999999999;
 }
+
 .dropzone.active .panel.panel-default {
   /* Center horizontally */
   margin-left: auto;
   margin-right: auto;
 }
+
 /* Keep panel-body and its children static when the dropzone is active */
 .dropzone.active .panel.panel-default {
   /* You can explicitly set the styles you want to stay static here */
   /* For example: */
   max-width: 400px;
   margin: 0 auto;
-}
-
-#js-upload-submit {
-  margin-top: 1%;
-}
-
-#js-upload-form {
-  text-align: left;
 }

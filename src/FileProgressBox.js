@@ -34,7 +34,7 @@ const FileProgressBox = ({ topLevelFolders, folderProgress }) => {
                         className={`collection card ${previewsVisible ? 'slide-up' : 'slide-down'
                             }`}
                         id="previews"
-                        style={{color: "black"}}
+                        style={{ color: "black" }}
                     >
                         {topLevelFolders.map((folderName, index) => (
                             <div

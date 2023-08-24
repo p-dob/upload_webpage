@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import FileUploaderForm from './FileUploaderForm';
+import FileProgressBox from './FileProgressBox';
 import axios from 'axios';
 import vars from './vars.json'
 import { useDropzone } from 'react-dropzone';
@@ -182,17 +183,24 @@ const FolderFileUploader = () => {
       id="dropzone"
       {...getRootProps()}
     >
-      <FileUploaderForm
-        files={files}
-        progress={progress}
-        uploadedFiles={uploadedFiles}
-        uploadInProgress={uploadInProgress}
-        handleFileChange={handleFileChange}
-        handleUpload={handleUpload}
-        topLevelFolders={topLevelFolders}
-        folderProgress={folderProgress}
-      />
-      <input {...getInputProps()} />
+      <div className="panel panel-default">
+        <FileUploaderForm
+          files={files}
+          progress={progress}
+          uploadedFiles={uploadedFiles}
+          uploadInProgress={uploadInProgress}
+          handleFileChange={handleFileChange}
+          handleUpload={handleUpload}
+          topLevelFolders={topLevelFolders}
+          folderProgress={folderProgress}
+        />
+        <input {...getInputProps()} />
+        <FileProgressBox
+          topLevelFolders={topLevelFolders}
+          uploadedFiles={uploadedFiles}
+          folderProgress={folderProgress}
+        />
+      </div>
     </div>
   );
 };
