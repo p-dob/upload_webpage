@@ -15,10 +15,14 @@ body {
 
 /* Custom style */
 .panel-body {
-  max-width: 400px;
+  max-width: 450px;
   margin: 0 auto;
   margin-left: auto;
   margin-right: auto;
+  background-color: rgba(103, 148, 197, 0.5);
+  border-radius: 10px;
+  padding: 1%;
+  text-align: center;
 }
 
 .wrapper {
@@ -41,7 +45,7 @@ body {
 }
 
 .dropzone.active {
-	border: 2px dashed #60a7dc;
+	border: 5px dashed #60a7dc;
 	display: flex;
   position: fixed;
   top: 0;
@@ -62,4 +66,12 @@ body {
   /* For example: */
   max-width: 400px;
   margin: 0 auto;
+}
+
+#js-upload-submit {
+  margin-top: 1%;
+}
+
+#js-upload-form {
+  text-align: left;
 }

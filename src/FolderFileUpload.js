@@ -183,6 +183,7 @@ const FolderFileUploader = () => {
       {...getRootProps()}
     >
       <FileUploaderForm
+        files={files}
         progress={progress}
         uploadedFiles={uploadedFiles}
         uploadInProgress={uploadInProgress}
@@ -192,10 +193,6 @@ const FolderFileUploader = () => {
         folderProgress={folderProgress}
       />
       <input {...getInputProps()} />
-      {/* <h4>{isDragActive ? 'Drop files here' : 'Drag and drop files here, or click to select'}</h4> */}
-      {files.length === 0
-        ? 'No files selected'
-        : `${files.length} file(s) selected`}
     </div>
   );
 };

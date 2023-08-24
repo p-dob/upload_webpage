@@ -34,6 +34,7 @@ const FileProgressBox = ({ topLevelFolders, folderProgress }) => {
                         className={`collection card ${previewsVisible ? 'slide-up' : 'slide-down'
                             }`}
                         id="previews"
+                        style={{color: "black"}}
                     >
                         {topLevelFolders.map((folderName, index) => (
                             <div
@@ -50,6 +51,7 @@ const FileProgressBox = ({ topLevelFolders, folderProgress }) => {
                                             style={{
                                                 width: `${folderProgress[folderName]?.uploadPercent || 0
                                                     }%`,
+                                                color: "white"
                                             }}
                                         >
                                             {folderProgress[folderName]?.uploadPercent?.toFixed(2) || 0}%
