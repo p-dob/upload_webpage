@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import './Test.css';
+import './FileProgressBox.css';
 
-const Test = ({ topLevelFolders, folderProgress }) => {
+const FileProgressBox = ({ topLevelFolders, folderProgress }) => {
     // function Test(topLevelFolders) {
     const [previewsVisible, setPreviewsVisible] = useState(false);
 
@@ -70,4 +70,4 @@ const Test = ({ topLevelFolders, folderProgress }) => {
     );
 }
 
-export default Test;
+export default FileProgressBox;
