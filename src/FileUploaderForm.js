@@ -1,6 +1,4 @@
 import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faCircle } from '@fortawesome/free-solid-svg-icons';
 import FileProgressBox from './FileProgressBox';
 
 const FileUploaderForm = ({ progress, uploadedFiles, uploadInProgress, handleFileChange, handleUpload, topLevelFolders, folderProgress }) => {

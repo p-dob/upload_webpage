@@ -118,8 +118,6 @@ const FolderFileUploader = () => {
       }
     }
     setFiles(folderContents);
-    let folder_total_size = 0;
-    folder_total_size = folderContents.reduce((total, file) => total + file.size, 0);
     // Update the state with top-level folder names
     setTopLevelFolders(Array.from(toplevelFolders));
     setFoldersToUpload(folders);
