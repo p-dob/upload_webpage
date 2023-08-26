@@ -9,7 +9,6 @@ import { useDropzone } from 'react-dropzone';
 const FolderFileUploader = () => {
   const [files, setFiles] = useState([]);
   const [progress, setProgress] = useState(0);
-  const [uploadedFiles, setUploadedFiles] = useState([]);
   const [topLevelFolders, setTopLevelFolders] = useState([]);
   const [uploadInProgress, setUploadInProgress] = useState(false);
   const [fileProgress, setFileProgress] = useState({});
@@ -126,7 +125,12 @@ const FolderFileUploader = () => {
 
   const handleUpload = async (e) => {
     e.preventDefault();
-
+    
+    // If upload is already in progress, return early
+    if (uploadInProgress) {
+      return;
+    }
+    
     try {
       setUploadInProgress(true); // Set upload status to true
 
@@ -163,12 +167,17 @@ const FolderFileUploader = () => {
       await Promise.all(uploadPromises);
 
       // Clear the uploaded files and progress
-      setUploadedFiles([...files]);
+      // setUploadedFiles([...files]);
       // Reset upload status after successful upload
       setUploadInProgress(false);
     } catch (error) {
       console.error('Error uploading files:', error);
       setUploadInProgress(false); // Reset upload status on error
+    } finally {
+      // Use setTimeout to delay resetting uploadInProgress flag
+      setTimeout(() => {
+        setUploadInProgress(false); // Reset upload status after a brief delay
+      }, 30); // Adjust the delay time as needed
     }
   };
 
@@ -177,29 +186,49 @@ const FolderFileUploader = () => {
     noClick: true, // Prevent file dialog from opening on click
   });
 
+  const handleCustomButtonClick = () => {
+    // Trigger the hidden file input when the custom button is clicked
+    document.getElementById('js-upload-files').click();
+    console.log(progress)
+  };
+
   return (
     <div
       className={`dropzone ${isDragActive ? 'active' : ''}`}
       id="dropzone"
       {...getRootProps()}
     >
+      <h4 style={{ textAlign: "center" }}>
+        Drag Your Files Anywhere On The Screen
+      </h4>
+      <h4 style={{ textAlign: "center" }}>
+        Or Click On The Button Below
+      </h4>
       <div className="panel panel-default">
         <FileUploaderForm
           files={files}
           progress={progress}
-          uploadedFiles={uploadedFiles}
           uploadInProgress={uploadInProgress}
           handleFileChange={handleFileChange}
           handleUpload={handleUpload}
-          topLevelFolders={topLevelFolders}
-          folderProgress={folderProgress}
         />
         <input {...getInputProps()} />
         <FileProgressBox
           topLevelFolders={topLevelFolders}
-          uploadedFiles={uploadedFiles}
           folderProgress={folderProgress}
+          progress={progress}
         />
+      </div>
+      <div className="form-group2">
+        {/* Custom button that triggers file input */}
+        <button
+          type="button"
+          className="btn blue btn-primary"
+          id="js-custom-upload-button"
+          onClick={handleCustomButtonClick}
+        >
+          Browse to select individual files
+        </button>
       </div>
     </div>
   );
