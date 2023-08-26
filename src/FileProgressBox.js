@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './FileProgressBox.css';
 
-const FileProgressBox = ({ topLevelFolders, folderProgress }) => {
-    // function Test(topLevelFolders) {
+const FileProgressBox = ({ topLevelFolders, folderProgress, progress }) => {
     const [previewsVisible, setPreviewsVisible] = useState(false);
 
     const togglePreviews = () => {
@@ -21,7 +20,7 @@ const FileProgressBox = ({ topLevelFolders, folderProgress }) => {
             <div className="col s12">
                 <div className={`preview-container ${topLevelFolders.length > 0 ? 'visible' : ''}`}>
                     <div className="header" onClick={togglePreviews}>
-                        <span>Uploaded Files</span>
+                        <span>{progress>=100 ? 'Uploaded Files': ( progress<0.01 ? 'Selected Files':'Uploading Files')}</span>
                         <i
                             id="controller"
                             className={`material-icons ${previewsVisible ? 'up' : 'down'

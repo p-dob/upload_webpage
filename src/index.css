@@ -58,3 +58,11 @@ body {
   max-width: 400px;
   margin: 0 auto;
 }
+
+.form-group2 {
+  display: grid;
+  left: 35%;
+  right: 35%;
+  top: 82%;
+  position: absolute;
+}

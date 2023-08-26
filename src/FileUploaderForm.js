@@ -1,16 +1,15 @@
 import React from 'react';
 import './FileUploaderForm.css'
 
-const FileUploaderForm = ({ files, progress, uploadedFiles, uploadInProgress, handleFileChange, handleUpload, topLevelFolders, folderProgress }) => {
-    const handleCustomButtonClick = () => {
-        // Trigger the hidden file input when the custom button is clicked
-        document.getElementById('js-upload-files').click();
-    };
+const FileUploaderForm = ({ files, progress, uploadInProgress, handleFileChange, handleUpload }) => {
+
     return (
-        <div className="panel-body">
+        <div className={`panel-body ${files.length > 0 ? 'visible' : ''}`}>
             {/* Standard Form */}
-            <h4>Drag Your Files Anywhere On The Screen</h4>
-            <h4>Or Choose From Below</h4>
+            <h4>Total Upload Progress</h4>
+            <h5 style={{ color: "white" }}>
+                {files.length === 0 ? 'No files selected' : `${files.length} file(s) selected`}
+            </h5>
             <form onSubmit={handleUpload} encType="multipart/form-data" id="js-upload-form">
                 <div className="form-inline">
                     <div className="form-group">
@@ -23,19 +22,6 @@ const FileUploaderForm = ({ files, progress, uploadedFiles, uploadInProgress, ha
                             onChange={handleFileChange}
                             style={{ display: 'none' }} // Hide the default input
                         />
-                        {/* Custom button that triggers file input */}
-                        <button
-                            type="button"
-                            className="btn blue btn-primary"
-                            id="js-custom-upload-button"
-                            onClick={handleCustomButtonClick}
-                        >
-                            Select files
-                        </button>
-                        <a style={{ color: "white", marginLeft: "5%" }}>{files.length === 0
-                            ? 'No files selected'
-                            : `${files.length} file(s) selected`}
-                        </a>
                     </div>
                     <button
                         type="submit"

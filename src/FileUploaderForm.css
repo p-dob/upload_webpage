@@ -1,4 +1,25 @@
 .panel-body {
+    display: none;
+}
+
+
+#js-upload-submit {
+    margin-top: 1%;
+    zoom: 150%;
+}
+
+#js-upload-form {
+    text-align: left;
+}
+
+.form-inline {
+    display: flex;
+    place-content: center;
+}
+
+.panel-body.visible {
+    animation: fade-in-animation 1s ease-in-out forwards;
+    display: block;
     max-width: 450px;
     margin: 0 auto;
     margin-left: auto;
@@ -7,13 +28,15 @@
     border-radius: 10px;
     padding: 1%;
     text-align: center;
+    margin-top: 10%;
 }
 
+@keyframes fade-in-animation {
+    0% {
+        opacity: 0;
+    }
 
-#js-upload-submit {
-    margin-top: 1%;
-}
-
-#js-upload-form {
-    text-align: left;
+    100% {
+        opacity: 1;
+    }
 }
