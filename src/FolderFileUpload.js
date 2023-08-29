@@ -5,6 +5,7 @@ import FileProgressBox from './FileProgressBox';
 import axios from 'axios';
 import vars from './vars.json'
 import { useDropzone } from 'react-dropzone';
+import './Modal.css';
 
 const FolderFileUploader = () => {
   const [files, setFiles] = useState([]);
@@ -140,6 +141,13 @@ const FolderFileUploader = () => {
     }
 
     try {
+      // Open a modal for user input
+      const userInput = await getUserInputModal();
+
+      // If the modal was closed or input wasn't provided, return early
+      if (!userInput) {
+        return;
+      }
       setUploadInProgress(true); // Set upload status to true
 
       // Create an array to store promises for each upload
@@ -150,6 +158,8 @@ const FolderFileUploader = () => {
         }
         formData.append('file', file);
         formData.append('folderName', file.path);
+        formData.append('userName', userInput.name); // Add user name to the form data
+        formData.append('userNumber', userInput.number); // Add user number to the form data
 
         return axios.post(vars['upload_endpoint'], formData, {
           headers: {
@@ -199,6 +209,27 @@ const FolderFileUploader = () => {
     document.getElementById('js-upload-files').click();
   };
 
+  // Function to open a modal for user input
+  const getUserInputModal = () => {
+    return new Promise((resolve) => {
+      const modal = document.getElementById('user-input-modal');
+      const nameInput = document.getElementById('name-input');
+      const numberInput = document.getElementById('number-input');
+      const submitButton = document.getElementById('submit-button');
+
+      nameInput.value = '';
+      numberInput.value = '';
+
+      modal.classList.add('open');
+
+      submitButton.addEventListener('click', () => {
+        const name = nameInput.value;
+        const number = numberInput.value;
+        modal.classList.remove('open');
+        resolve({ name, number }); // Resolve the promise with user input
+      });
+    });
+  };
   return (
     <div
       className={`dropzone ${isDragActive ? 'active' : ''}`}
@@ -240,6 +271,15 @@ const FolderFileUploader = () => {
         >
           Browse to select individual files
         </button>
+      </div>
+
+      <div id="user-input-modal" className="modal">
+        <div className="modal-content">
+          <h2>Enter User Information</h2>
+          <input type="text" id="name-input" placeholder="Name" />
+          <input type="number" id="number-input" placeholder="Number" />
+          <button id="submit-button">Submit</button>
+        </div>
       </div>
 
       <img
