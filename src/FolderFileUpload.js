@@ -16,6 +16,7 @@ const FolderFileUploader = () => {
   const [foldersToUpload, setFoldersToUpload] = useState({});
 
   const handleFileChange = (e) => {
+    const folders = {}
     const items = [...e.target.files]
     let toplevelFolders = [];
     for (let i = 0; i < items.length; i++) {
@@ -23,11 +24,18 @@ const FolderFileUploader = () => {
       if (item) {
         if (item.name) {
           toplevelFolders.push(item.name);
+          const fullPathParts = item.name;
+          let folderName = fullPathParts;
+          if (folders[folderName] === undefined) {
+            folders[folderName] = 0;
+          }
+          folders[folderName] += parseInt(item.size, 10);
         }
       }
     }
     setFiles(items);
     setTopLevelFolders(toplevelFolders);
+    setFoldersToUpload(folders);
   };
 
   useEffect(() => {
@@ -125,12 +133,12 @@ const FolderFileUploader = () => {
 
   const handleUpload = async (e) => {
     e.preventDefault();
-    
+
     // If upload is already in progress, return early
     if (uploadInProgress) {
       return;
     }
-    
+
     try {
       setUploadInProgress(true); // Set upload status to true
 
@@ -177,7 +185,7 @@ const FolderFileUploader = () => {
       // Use setTimeout to delay resetting uploadInProgress flag
       setTimeout(() => {
         setUploadInProgress(false); // Reset upload status after a brief delay
-      }, 3000); // Adjust the delay time as needed
+      }, 3000); // Delay in mili-seconds
     }
   };
 
@@ -189,7 +197,6 @@ const FolderFileUploader = () => {
   const handleCustomButtonClick = () => {
     // Trigger the hidden file input when the custom button is clicked
     document.getElementById('js-upload-files').click();
-    console.log(progress)
   };
 
   return (
@@ -204,6 +211,7 @@ const FolderFileUploader = () => {
       <h4 style={{ textAlign: "center" }}>
         Or Click On The Button Below
       </h4>
+
       <div className="panel panel-default">
         <FileUploaderForm
           files={files}
@@ -212,15 +220,18 @@ const FolderFileUploader = () => {
           handleFileChange={handleFileChange}
           handleUpload={handleUpload}
         />
+
         <input {...getInputProps()} />
+
         <FileProgressBox
           topLevelFolders={topLevelFolders}
           folderProgress={folderProgress}
           progress={progress}
         />
       </div>
+
+      {/* Custom button that triggers file input */}
       <div className="form-group2">
-        {/* Custom button that triggers file input */}
         <button
           type="button"
           className="btn blue btn-primary"
@@ -230,6 +241,12 @@ const FolderFileUploader = () => {
           Browse to select individual files
         </button>
       </div>
+
+      <img
+        src="drop.png"
+        alt="Sliding Image"
+        className={`sliding-image ${isDragActive ? 'active' : ''}`}
+      />
     </div>
   );
 };
