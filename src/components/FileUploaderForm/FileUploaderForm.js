@@ -1,8 +1,7 @@
 import React from 'react';
-import './FileUploaderForm.css'
+import './FileUploaderForm.css';
 
 const FileUploaderForm = ({ files, progress, uploadInProgress, handleFileChange, handleUpload }) => {
-
     return (
         <div className={`panel-body ${files.length > 0 ? 'visible' : ''}`}>
             {/* Standard Form */}

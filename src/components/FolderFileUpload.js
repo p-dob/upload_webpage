@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import FileUploaderForm from './FileUploaderForm';
-import FileProgressBox from './FileProgressBox';
+import FileUploaderForm from './FileUploaderForm/FileUploaderForm';
+import FileProgressBox from './FileProgressBox/FileProgressBox';
 import axios from 'axios';
-import vars from './vars.json'
+import vars from '../vars.json';
 import { useDropzone } from 'react-dropzone';
 import './Modal.css';
 
 const FolderFileUploader = () => {
+  // State variables
   const [files, setFiles] = useState([]);
   const [progress, setProgress] = useState(0);
   const [topLevelFolders, setTopLevelFolders] = useState([]);
@@ -16,35 +17,32 @@ const FolderFileUploader = () => {
   const [folderProgress, setFolderProgress] = useState({});
   const [foldersToUpload, setFoldersToUpload] = useState({});
 
+  // Handle file change event
   const handleFileChange = (e) => {
-    const folders = {}
-    const items = [...e.target.files]
-    let toplevelFolders = [];
-    for (let i = 0; i < items.length; i++) {
-      const item = items[i];
-      if (item) {
-        if (item.name) {
-          toplevelFolders.push(item.name);
-          const fullPathParts = item.name;
-          let folderName = fullPathParts;
-          if (folders[folderName] === undefined) {
-            folders[folderName] = 0;
-          }
-          folders[folderName] += parseInt(item.size, 10);
-        }
+    const folders = {};
+    const items = [...e.target.files];
+    const toplevelFolders = [];
+
+    items.forEach((item) => {
+      if (item.name) {
+        toplevelFolders.push(item.name);
+        const folderName = item.name;
+        folders[folderName] = (folders[folderName] || 0) + parseInt(item.size, 10);
       }
-    }
+    });
+
     setFiles(items);
     setTopLevelFolders(toplevelFolders);
     setFoldersToUpload(folders);
   };
 
+  // Reset progress when new files are selected
   useEffect(() => {
-    setProgress(0); // Reset progress to 0 when new files are selected
+    setProgress(0);
     setFileProgress({});
   }, [files]);
 
-  // useEffect to update folderProgress when fileProgress changes
+  // Update folderProgress when fileProgress changes
   useEffect(() => {
     const updatedFolderProgress = {};
     let totalUploadedSize = 0;
@@ -58,23 +56,25 @@ const FolderFileUploader = () => {
         if (!updatedFolderProgress[folderName]) {
           updatedFolderProgress[folderName] = {
             uploadedSize: 0,
-            totalSize: 0
+            totalSize: 0,
           };
         }
 
         updatedFolderProgress[folderName][filename] = {
           uploadedSize: innerProgress.uploadedSize,
-          totalSize: innerProgress.totalSize
+          totalSize: innerProgress.totalSize,
         };
 
         // Calculate total progress and total size for the folder
         updatedFolderProgress[folderName].uploadedSize += innerProgress.uploadedSize;
         updatedFolderProgress[folderName].totalSize += innerProgress.totalSize;
-        let percent = (updatedFolderProgress[folderName].uploadedSize / foldersToUpload[folderName]) * 100;
+
+        const percent =
+          (updatedFolderProgress[folderName].uploadedSize / foldersToUpload[folderName]) * 100;
         updatedFolderProgress[folderName].uploadPercent = Math.min(percent, 100);
       } else {
         updatedFolderProgress[filename] = progressArray[progressArray.length - 1];
-        let percent = (updatedFolderProgress[filename].uploadedSize / foldersToUpload[filename]) * 100;
+        const percent = (updatedFolderProgress[filename].uploadedSize / foldersToUpload[filename]) * 100;
         updatedFolderProgress[filename].uploadPercent = Math.min(percent, 100);
       }
     });
@@ -83,55 +83,48 @@ const FolderFileUploader = () => {
     // Calculate the total uploaded size and total size based on each file's progress
     Object.entries(updatedFolderProgress).forEach(([filename, progressData]) => {
       totalUploadedSize += progressData.uploadedSize;
-      // totalTotalSize += progressData.totalSize;
     });
 
     if (totalTotalSize === 0) {
       setProgress(0); // Avoid division by zero
     } else {
-      let total_progress = (totalUploadedSize / totalTotalSize) * 100;
-      total_progress = Math.min(total_progress, 100).toFixed(2);
-      setProgress(total_progress);
+      const totalProgress = Math.min((totalUploadedSize / totalTotalSize) * 100, 100).toFixed(2);
+      setProgress(totalProgress);
     }
 
     setFolderProgress(updatedFolderProgress);
   }, [fileProgress]);
 
+  // Handle file drop event
   const handleDrop = (e) => {
     const items = e;
-    let folderContents = [];
-    // Using Set to store unique top-level folder names
-    let toplevelFolders = new Set();
-
+    const folderContents = [];
+    const toplevelFolders = new Set();
+    const folders = {};
     // this might seem unnecessary at first, as folder's names and progress
     // are captured in handleUpload but it is needed otherwise no name will
     // appear unless we click on upload button
-    const folders = {}
-    for (let i = 0; i < items.length; i++) {
-      const item = items[i];
-      if (item) {
-        if (item.path) {
-          folderContents.push(item);
-          const fullPathParts = item.path.split("/");
-          if (fullPathParts[0] === "") {
-            // Remove the first element if it is empty (due to leading '/')
-            fullPathParts.shift();
-          }
-          let folderName = fullPathParts[0];
-          if (folders[folderName] === undefined) {
-            folders[folderName] = 0;
-          }
-          folders[folderName] += parseInt(item.size, 10);
-          toplevelFolders.add(fullPathParts[0]);
+    items.forEach((item) => {
+      if (item.path) {
+        folderContents.push(item);
+        const fullPathParts = item.path.split('/');
+        if (fullPathParts[0] === '') {
+          // Remove the first element if it is empty (due to leading '/')
+          fullPathParts.shift();
         }
+        const folderName = fullPathParts[0];
+        folders[folderName] = (folders[folderName] || 0) + parseInt(item.size, 10);
+        toplevelFolders.add(fullPathParts[0]);
       }
-    }
+    });
+
     setFiles(folderContents);
     // Update the state with top-level folder names
     setTopLevelFolders(Array.from(toplevelFolders));
     setFoldersToUpload(folders);
   };
 
+  // Handle file upload
   const handleUpload = async (e) => {
     e.preventDefault();
 
@@ -148,54 +141,50 @@ const FolderFileUploader = () => {
       if (!userInput) {
         return;
       }
-      setUploadInProgress(true); // Set upload status to true
+
+      setUploadInProgress(true);
 
       // Create an array to store promises for each upload
       const uploadPromises = files.map((file) => {
         const formData = new FormData();
         if (!file.path) {
-          file.path = file.name
+          file.path = file.name;
         }
         formData.append('file', file);
         formData.append('folderName', file.path);
-        formData.append('userName', userInput.name); // Add user name to the form data
-        formData.append('userNumber', userInput.number); // Add user number to the form data
+        formData.append('userName', userInput.name);
+        formData.append('userNumber', userInput.number);
 
         return axios.post(vars['upload_endpoint'], formData, {
           headers: {
-            'Content-Type': 'multipart/form-data'
+            'Content-Type': 'multipart/form-data',
           },
           onUploadProgress: (progressEvent) => {
-            setFileProgress(prevProgress => {
-              let newProgress = { ...prevProgress };
+            setFileProgress((prevProgress) => {
+              const newProgress = { ...prevProgress };
               newProgress[file.path] = [
                 ...(newProgress[file.path] || []),
                 {
                   uploadedSize: progressEvent.loaded,
-                  totalSize: progressEvent.total
-                }
+                  totalSize: progressEvent.total,
+                },
               ];
               return newProgress;
             });
-          }
+          },
         });
       });
 
       // Use Promise.all to execute all upload promises concurrently
       await Promise.all(uploadPromises);
-
-      // Clear the uploaded files and progress
-      // setUploadedFiles([...files]);
-      // Reset upload status after successful upload
       setUploadInProgress(false);
     } catch (error) {
       console.error('Error uploading files:', error);
-      setUploadInProgress(false); // Reset upload status on error
+      setUploadInProgress(false);
     } finally {
-      // Use setTimeout to delay resetting uploadInProgress flag
       setTimeout(() => {
-        setUploadInProgress(false); // Reset upload status after a brief delay
-      }, 3000); // Delay in mili-seconds
+        setUploadInProgress(false);
+      }, 3000);
     }
   };
 
@@ -204,12 +193,7 @@ const FolderFileUploader = () => {
     noClick: true, // Prevent file dialog from opening on click
   });
 
-  const handleCustomButtonClick = () => {
-    // Trigger the hidden file input when the custom button is clicked
-    document.getElementById('js-upload-files').click();
-  };
-
-  // Function to open a modal for user input
+  // Get user input via modal
   const getUserInputModal = () => {
     return new Promise((resolve) => {
       const modal = document.getElementById('user-input-modal');
@@ -226,22 +210,20 @@ const FolderFileUploader = () => {
         const name = nameInput.value;
         const number = numberInput.value;
         modal.classList.remove('open');
-        resolve({ name, number }); // Resolve the promise with user input
+        resolve({ name, number });
       });
     });
   };
+
+  // Custom button click handler
+  const handleCustomButtonClick = () => {
+    document.getElementById('js-upload-files').click();
+  };
+
   return (
-    <div
-      className={`dropzone ${isDragActive ? 'active' : ''}`}
-      id="dropzone"
-      {...getRootProps()}
-    >
-      <h4 style={{ textAlign: "center" }}>
-        Drag Your Files Anywhere On The Screen
-      </h4>
-      <h4 style={{ textAlign: "center" }}>
-        Or Click On The Button Below
-      </h4>
+    <div className={`dropzone ${isDragActive ? 'active' : ''}`} id="dropzone" {...getRootProps()}>
+      <h4 style={{ textAlign: 'center' }}>Drag Your Files Anywhere On The Screen</h4>
+      <h4 style={{ textAlign: 'center' }}>Or Click On The Button Below</h4>
 
       <div className="panel panel-default">
         <FileUploaderForm

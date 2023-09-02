@@ -1,5 +1,5 @@
 import React from 'react';
-import FolderFileUpload from './FolderFileUpload';
+import FolderFileUpload from './components/FolderFileUpload';
 
 function App() {
   return (
